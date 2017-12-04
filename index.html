@@ -251,7 +251,7 @@
         </div>
       </div>
       <div class="col-md-2">
-        <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#registerModal">Register</a>
+        <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#registerModal">Register</button>
       </div>
     </div>
     <div class="row">
@@ -264,9 +264,40 @@
     </div>
 
     <div class="row">
-      <div id="movies" class="col-md-12"></div>
+      <div id="movies" class="col-sm-8 col-xs-12"></div>
+      <div class="col-sm-4 col-xs-12">
+        <h2>Over IRMATube</h2>
+        <p>Deze demo is een fictieve video-streaming
+           service, die meerdere aspecten van IRMA demonstreert. Door “lid” te
+           worden van IRMATube met de knop bovenaan de pagina ontvangt u
+           lidmaatschaps-attributen. Deze kunt u
+           dan later vrijgeven om (trailers van) films te bekijken.</p>
+        <p>In het bijzonder laat IRMATube de volgende aspecten van
+           attribuut-gebaseerde authenticatie zien.</p>
+          <ul>
+            <li>
+              <p>Bij het lid worden ontvangt u <em>twee</em> attributen: een die enkel
+                 aangeeft dat u lid bent, en een andere die een identificerend
+                 lidmaatschapsnummer bevat. Bij het bekijken van een film wordt
+                 echter enkel om het lidmaatschaps-attribuut gevraagd.  U wordt
+                 daardoor niet geïdentificeerd: u toont enkel aan dat u lid bent,
+                 maar niet wie u bent.</p>
+              <p>In een uitgebreider en realistischer scenario zou u misschien uw
+                 lidmaatschapsnummer wel willen onthullen als u een bepaalde film aan
+                 uw profiel wil toegevoegen. Dit zit echter niet in de huidige versie
+                 van de IRMATube demo.</p>
+            </li>
+            <li>
+              <p>Sommige films op IRMATube hebben een leeftijdsgrens. Wanneer u een
+                 van deze films wilt bekijken, toont u niet alleen uw
+                 IRMATube-lidmaatschaps attribuut, maar toont u ook aan dat u oud
+                 genoeg bent door middel van een leeftijdsgrens-attribuut.  (Deze
+                 attributen kunt u <a href="/uitgifte/idin">hier</a> krijgen.)</p>
+            </li>
+          </ul>
       </div>
     </div>
+  </div>
   </div>
 </body>
 </html>
