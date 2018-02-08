@@ -1,14 +1,12 @@
 <?php
 require_once 'vendor/autoload.php';
-require 'range_serve.php';
+require_once 'config.php';
+require_once 'range_serve.php';
 use \Firebase\JWT\JWT;
 
 // Stream the specified file, if it exists, and if the IRMA JWT:
 // - is validly signed by the API server;
 // - specifies that the user had the membership attribute and if necessary, the applicable age attribute.
-
-$movies = array("django", "elysium", "oblivion", "olympus-has-fallen",
-    "oz-the-great-and-powerful", "planes", "up", "were-the-millers");
 
 if(!isset($_REQUEST['file']) || empty($_REQUEST['file']))
 {
@@ -35,12 +33,10 @@ if (!in_array($file_name, $movies)) {
     exit;
 }
 
-define('ROOT_DIR', __DIR__ . '/../../../../irmatube/data/');
-
 $base_path = ROOT_DIR . "videos/" . $base_name;
 $file_path = ROOT_DIR . "videos/" . $file_name;
 
-$jwt_pk = file_get_contents(ROOT_DIR . "pk.pem");
+$jwt_pk = file_get_contents(ROOT_DIR . API_SERVER_PUBLICKEY);
 
 $token = $_REQUEST['token'];
 

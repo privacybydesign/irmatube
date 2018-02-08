@@ -1,20 +1,19 @@
 <?php
 require_once 'vendor/autoload.php';
+require_once 'config.php';
 use \Firebase\JWT\JWT;
 
 // Generate a disclosure or issuance JWT
 
-define('ROOT_DIR', __DIR__ . '/../../../../irmatube/data/');
-
 function get_jwt_key() {
-    $path = "file://" . ROOT_DIR . "demo-sk.pem";
+    $path = "file://" . ROOT_DIR . JWT_PRIVATEKEY;
     $pk = openssl_pkey_get_private($path);
     if ($pk === false)
         throw new Exception("Failed to load signing key " . $path);
     return $pk;
 }
 
-function get_issuance_jwt($authenticated_user) {
+function get_issuance_jwt() {
     $pk = get_jwt_key();
 
     $randomnum = rand(1,9);
