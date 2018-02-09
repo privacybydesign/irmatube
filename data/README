@@ -1,0 +1,8 @@
+Data directory
+--------------
+
+You are mostly responsible for filling this directory yourself. You need to add:
+
+ * pk.pem - The issuer's public key
+ * videos/ - A directory containing `*.webm`, `*.mp4`, `*.access` files for the movies you include
+
