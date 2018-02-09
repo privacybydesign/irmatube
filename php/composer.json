@@ -1,0 +1,15 @@
+{
+    "name": "privacybydesign/irmatube",
+    "description": "IRMA demo showing issuance and verification of IRMA attributes",
+    "type": "project",
+    "require": {
+        "firebase/php-jwt": "3.0.0"
+    },
+    "license": "Apache",
+    "authors": [
+        {
+            "name": "Privacy by Design Foundation",
+            "email": "irma@privacybydesign.foundation"
+        }
+    ]
+}
