@@ -1,0 +1,13 @@
+{
+  "name": "irmatube",
+  "version": "1.0.0",
+  "description": "IRMA demo showing issuance and verification of IRMA attributes",
+  "author": "Privacy by Design Foundation",
+  "license": "Apache",
+  "dependencies": {
+    "bootstrap": "^3.3.6",
+    "jquery": "^3.3.1",
+    "jwt-decode": "^2.2.0",
+    "mustache": "^2.3.0"
+  }
+}
