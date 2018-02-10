@@ -1,12 +1,14 @@
 # IRMATube
 
-[IRMATube](https://privacybydesign.foundation/demo/irmaTube/) is a demo of an [IRMA](https://privacybydesign.foundation/irma-en) attribute issuance and verifier. It offers membership attributes to users, who then need to disclose these in order to watch a movie.
+[IRMATube](https://privacybydesign.foundation/demo-en/irmaTube/) is a demo of an [IRMA](https://privacybydesign.foundation/irma-en) attribute issuance and verifier. It offers membership attributes to users, who then need to disclose these in order to watch a movie.
 
 It showcases the following features:
 
 * Issuance and verification of attributes to users.
 * Selective disclosure of attributes: although an identifying membership number is issued to the user, this number is not disclosed during verification, so that IRMATube knows that a member is watching a movie, but not which member.
 * Granting access to a resource only after successful IRMA attribute verification.
+
+Note that the movies themselves are not included in this repository.
 
 ## Installation
 
