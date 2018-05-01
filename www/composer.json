@@ -3,7 +3,8 @@
     "description": "IRMA demo showing issuance and verification of IRMA attributes",
     "type": "project",
     "require": {
-        "firebase/php-jwt": "3.0.0"
+        "firebase/php-jwt": "3.0.0",
+        "irma/requestor": "~0.1.0"
     },
     "license": "Apache",
     "authors": [

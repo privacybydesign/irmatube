@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "30d909f8eee20cef0f094a2f2d8c6e52",
+    "content-hash": "c1bb78ee7d20c2b3113352640f637608",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -48,6 +48,46 @@
             "description": "A simple library to encode and decode JSON Web Tokens (JWT) in PHP. Should conform to the current spec.",
             "homepage": "https://github.com/firebase/php-jwt",
             "time": "2015-07-22T18:31:08+00:00"
+        },
+        {
+            "name": "irma/requestor",
+            "version": "v0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/privacybydesign/irma-requestor.git",
+                "reference": "3d23a02653d67d7ef5e027e3414ffe1da0502f43"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/privacybydesign/irma-requestor/zipball/3d23a02653d67d7ef5e027e3414ffe1da0502f43",
+                "reference": "3d23a02653d67d7ef5e027e3414ffe1da0502f43",
+                "shasum": ""
+            },
+            "require": {
+                "firebase/php-jwt": "3.0.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "IRMA\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Sietse Ringers",
+                    "email": "s.ringers@privacybydesign.foundation"
+                },
+                {
+                    "name": "Privacy by Design Foundation",
+                    "email": "irma@privacybydesign.foundation"
+                }
+            ],
+            "description": "Create signed IRMA issuance or verification requests",
+            "time": "2018-04-27T14:38:31+00:00"
         }
     ],
     "packages-dev": [],
