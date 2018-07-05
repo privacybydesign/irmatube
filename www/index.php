@@ -44,12 +44,10 @@
   <script id="movieTpl" type="text/template">
     <div id="movie_{{id}}_wrapper">
     <div class="mosaic-block bar" id="movie_{{id}}">
-      <span href="#"  class="mosaic-overlay">
-        <h4 onclick="openMovie('{{id}}', '{{ageLimit}}');">{{title}}</h4>
+      <span href="#" class="mosaic-overlay"  onclick="openMovie('{{id}}', '{{ageLimit}}');">
+        <h4>{{title}}</h4>
         {{#ageLimit}}
-        <a href='#ageModal' onclick="showAgeModal()">
-          <img src='img/movieage-{{ageLimit}}.png' />
-        </a>
+        <img src='img/movieage-{{ageLimit}}.png' />
         {{/ageLimit}}
       </span>
 
@@ -61,11 +59,6 @@
   </script>
 
   <script type="text/javascript">
-    function showAgeModal() {
-      $("#alert_box").empty();
-      $("#ageModal").modal();
-    };
-
     function showWarning(msg) {
       console.log(msg);
       $("#alert_box").html('<div class="alert alert-warning" role="alert">'
@@ -188,55 +181,6 @@
         <div class="modal-footer">
           <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
           <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true" id="IRMARegister">Register using IRMA</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div id="ageModal" class="modal fade" tabindex="-1" role="dialog"
-    aria-labelledby="ageModal" aria-hidden="true">
-    <div class="modal-dialog" id="ageDialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal"
-            aria-hidden="true">×</button>
-          <h4 class="modal-title" id="ageModal">Age references</h4>
-        </div>
-        <div class="modal-body">
-          <p>To watch movie trailers, you need to prove membership of the
-            IRMA Tube club. Having your IRMA app at hand, you can do this
-            easily.</p>
-
-          <p>Don't forget that the IRMA technology is secure and respects
-            your privacy. Neither central authorities nor the IRMA Tube service
-            provider knows who you are, nobody can trace what movies you watch
-            and you are interested in.</p>
-
-          <table class="table">
-            <tr>
-              <td></td>
-              <td>If the movie is not age restricted, you only need to show
-                that you are a member.</td>
-            </tr>
-            <tr>
-              <td><img src="img/movieage-12.png" /></td>
-              <td>You need to show your 'Over 12' attribute and that you
-                are a member</td>
-            </tr>
-            <tr>
-              <td><img src="img/movieage-16.png" /></td>
-              <td>You need to show your 'Over 16' attribute and that you
-                are a member</td>
-            </tr>
-            <tr>
-              <td><img src="img/movieage-18.png" /></td>
-              <td>You need to show your 'Over 18' attribute and that you
-                are a member</td>
-            </tr>
-          </table>
-        </div>
-        <div class="modal-footer">
-          <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
         </div>
       </div>
     </div>
