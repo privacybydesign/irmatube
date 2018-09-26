@@ -1,0 +1,24 @@
+{
+    "name": "irma/requestor",
+    "description": "Create signed IRMA issuance or verification requests",
+    "license": "Apache-2.0",
+    "minimum-stability": "dev",
+    "authors": [
+        {
+            "name": "Sietse Ringers",
+            "email": "s.ringers@privacybydesign.foundation"
+        },
+        {
+            "name": "Privacy by Design Foundation",
+            "email": "irma@privacybydesign.foundation"
+        }
+    ],
+    "require": {
+        "firebase/php-jwt": "3.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "IRMA\\" : "src/"
+        }
+    }
+}
