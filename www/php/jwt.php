@@ -30,7 +30,7 @@ function get_verification_jwt($requestor, $age = null) {
     if ($age != null) {
         $attrs[] = [
             "label" => "iDIN over " . $age,
-            "attributes" => [ "pbdf.pbdf.ageLimits.over" . $age ]
+            "attributes" => [ "pbdf.pbdf.ageLimits.over" . $age, "pbdf.nijmegen.ageLimits.over" . $age ]
         ];
     }
     return $requestor->getVerificationJwt($attrs);

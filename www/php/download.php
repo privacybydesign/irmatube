@@ -70,8 +70,11 @@ function isAgeAllowed($file_path, $attributes) {
         return true;
     }
 
-    $age_key = "pbdf.pbdf.ageLimits.over" . $age_restriction;
-    return array_key_exists($age_key, $attributes) && $attributes[$age_key] === "yes";
+    $pbdf_age_key = "pbdf.pbdf.ageLimits.over" . $age_restriction;
+    $nijmegen_age_key = "pbdf.pbdf.nijmegen.over" . $age_restriction;
+
+    return (array_key_exists($age_key_pbdf, $attributes) && $attributes[$age_key_pbdf] === "yes") ||
+        (array_key_exists($age_key_nijmegen, $attributes) && $attributes[$age_key_nijmegen] === "yes");
 }
 
 if( isAgeAllowed($file_path, $attributes) && isMember($attributes) ) {
