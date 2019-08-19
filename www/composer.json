@@ -4,7 +4,8 @@
     "type": "project",
     "require": {
         "firebase/php-jwt": "3.0.0",
-        "irma/requestor": "~0.1.0"
+        "ext-json": "*",
+        "ext-ctype": "*"
     },
     "license": "Apache",
     "authors": [

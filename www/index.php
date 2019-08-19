@@ -19,9 +19,10 @@
   <script src="node_modules/jquery/dist/jquery.min.js" type="text/javascript"></script>
   <script src="js/mosaic.1.0.1.min.js" type="text/javascript"></script>
   <script src="node_modules/mustache/mustache.min.js" type="text/javascript"></script>
+  <script src="node_modules/bootstrap/dist/js/bootstrap.min.js" type="text/javascript"></script>
   <script src="content/movies.js" type="text/javascript"></script>
 
-  <script src="https://privacybydesign.foundation/tomcat/irma_api_server/client/irma.js" type="text/javascript" async></script>
+  <script src="node_modules/@privacybydesign/irmajs/dist/irma.js" type="text/javascript" async></script>
 
   <script id="moviePlayerTpl" type="text/template">
     <div class="modal fade" tabindex="-1" role="dialog" id="video_div_{{id}}">
@@ -64,14 +65,14 @@
       $("#alert_box").html('<div class="alert alert-warning" role="alert">'
                            + '<strong>Warning:</strong> '
                            + msg + '</div>');
-    };
+    }
 
     function showError(msg) {
       console.log(msg);
       $("#alert_box").html('<div class="alert alert-danger" role="alert">'
                            + '<strong>Error:</strong> '
                            + msg + '</div>');
-    };
+    }
 
     function showSuccess(msg) {
       $("#alert_box").html('<div class="alert alert-success" role="alert">'
@@ -79,18 +80,30 @@
                            + msg + '</div>');
     }
 
+    function onVerifyFailure(data) {
+      if(data === 'CANCELLED')
+        showWarning(data);
+      else
+        showError(data);
+    }
+
     function register() {
       console.log("Registring for IRMAtube");
       $("#alert_box").empty();
-      var onIssuanceSuccess = function() {
+      let onIssuanceSuccess = function() {
           showSuccess("You are now registered for IRMATube");
-      }
+      };
 
       $.get({
-          url: "php/jwt.php?type=issuance&" + Math.random(), // Append randomness so that IE doesn't consider it 304 not modified
-          success: function(jwt) {
-              IRMA.issue(jwt, onIssuanceSuccess, showWarning, showError);
-          }
+        url: "php/session.php?type=issuance&" + Math.random(), // Append randomness so that IE doesn't consider it 304 not modified
+        success: function(sessionJson) {
+          let session = JSON.parse(sessionJson);
+          let options = {
+              language: '<?= $language ?>',
+          };
+          let promise = irma.handleSession(session.sessionPtr, options);
+          promise.then(onIssuanceSuccess, onVerifyFailure);
+        }
       });
     }
 
@@ -98,34 +111,42 @@
       console.log("Playing movie", videoNumber, ageLimit);
       $("#alert_box").empty();
 
-      var onVerifySuccess = function(data) {
+      let onVerifySuccess = function(data) {
         console.log(data);
 
-        var data = {
+        let videoData = {
           id: videoNumber,
           token: data,
           url: "php/download.php"
         };
 
-        var video_template = $("#moviePlayerTpl").html();
-        $("#moviebox").html(Mustache.to_html(video_template, data));
+        let video_template = $("#moviePlayerTpl").html();
+        $("#moviebox").html(Mustache.to_html(video_template, videoData));
 
-        $("#video_div_" + videoNumber).modal('show')
+        $("#video_div_" + videoNumber).modal('show');
         $("#video_div_" + videoNumber).css("display", "block");
         $("#video_" + videoNumber).get(0).load();
         $("#video_" + videoNumber).get(0).play();
       };
 
-      var url = "php/jwt.php?type=verification";
+      let url = "php/session.php?type=verification";
       if (ageLimit > 0)
-        var url = url + "&age=" + ageLimit;
-      url = url + "&" + Math.random(); // Append randomness so that IE doesn't consider it 304 not modified
+        url += "&age=" + ageLimit;
+      url += "&" + Math.random(); // Append randomness so that IE doesn't consider it 304 not modified
 
       $.get({
-          url: url,
-          success: function(jwt) {
-              IRMA.verify(jwt, onVerifySuccess, showWarning, showError);
-          }
+        url: url,
+        success: function(sessionJson) {
+          let session = JSON.parse(sessionJson);
+          let options = {
+              language: '<?= $language ?>',
+              token: session.token,
+              server: session.sessionPtr.u.split('/irma')[0],
+              resultJwt: true,
+          };
+          let promise = irma.handleSession(session.sessionPtr, options);
+          promise.then(onVerifySuccess, onVerifyFailure);
+        }
       });
     }
 
@@ -135,10 +156,10 @@
     }
 
     $(function() {
-      var template = $("#movieTpl").html();
+      let template = $("#movieTpl").html();
       IRMATubeMovies.sort(function() { return 0.5 - Math.random();});
       console.log(IRMATubeMovies);
-      for ( var i = 0; i < IRMATubeMovies.length; i++) {
+      for ( let i = 0; i < IRMATubeMovies.length; i++) {
         movie = IRMATubeMovies[i];
         console.log(movie);
         $("#movies").append(Mustache.to_html(template, movie));

@@ -36,7 +36,7 @@ if (!in_array($file_name, $movies)) {
 $base_path = ROOT_DIR . "videos/" . $base_name;
 $file_path = ROOT_DIR . "videos/" . $file_name;
 
-$jwt_pk = file_get_contents(ROOT_DIR . API_SERVER_PUBLICKEY);
+$jwt_pk = file_get_contents(ROOT_DIR . IRMA_SERVER_PUBLICKEY);
 
 $token = $_REQUEST['token'];
 
@@ -48,17 +48,23 @@ try {
     header("HTTP/1.0 403 Forbidden");
     exit;
 }
-$attributes = (array) $decoded->attributes;
+$disclosed = (array) $decoded->disclosed;
 
-function isMember($attributes) {
+function isMember($disclosed) {
     $member_key = "pbdf.pbdf.irmatube.type";
-    if (array_key_exists($member_key, $attributes) && $attributes[$member_key] == "regular")
-        return true;
+    foreach ($disclosed as $con) {
+        foreach ($con as $attr) {
+            if ($attr->id == $member_key) {
+                return $attr->rawvalue == "regular";
+            }
+        }
+    }
+
     return false;
 }
 
-function isAgeAllowed($file_path, $attributes) {
-    if(!isset($file_path) || !isset($attributes)) {
+function isAgeAllowed($file_path, $disclosed) {
+    if(!isset($file_path) || !isset($disclosed)) {
         return false;
     }
 
@@ -72,12 +78,20 @@ function isAgeAllowed($file_path, $attributes) {
 
     $age_key_pbdf = "pbdf.pbdf.ageLimits.over" . $age_restriction;
     $age_key_nijmegen = "pbdf.nijmegen.ageLimits.over" . $age_restriction;
+    $age_key_gemeente = "pbdf.gemeente.personalData.over" . $age_restriction;
 
-    return (array_key_exists($age_key_pbdf, $attributes) && $attributes[$age_key_pbdf] === "yes") ||
-        (array_key_exists($age_key_nijmegen, $attributes) && $attributes[$age_key_nijmegen] === "Yes");
+    foreach ($disclosed as $con) {
+        foreach ($con as $attr) {
+            if ($attr->id == $age_key_pbdf || $attr->id == $age_key_nijmegen || $attr->id == $age_key_gemeente) {
+                return strtolower($attr->rawvalue) == "yes";
+            }
+        }
+    }
+
+    return false;
 }
 
-if( isAgeAllowed($file_path, $attributes) && isMember($attributes) ) {
+if( isAgeAllowed($file_path, $disclosed) && isMember($disclosed) ) {
     range_serve($base_path);
 } else {
     header("HTTP/1.0 403 Forbidden");

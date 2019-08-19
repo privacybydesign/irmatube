@@ -1,8 +1,11 @@
 <?php
 
 define('ROOT_DIR', __DIR__ . '/../data/');
-define('JWT_PRIVATEKEY', 'sk.pem');
-define('API_SERVER_PUBLICKEY', 'pk.pem');
+
+// URL and JWT public key of your IRMA server, also include your access token if enabled on your server
+define('IRMA_SERVER_URL', 'http://localhost:8088');
+define('IRMA_SERVER_PUBLICKEY', 'pk.pem');
+define('IRMA_SERVER_API_TOKEN', '');
 
 $language = 'en';
 
