@@ -1,0 +1,19 @@
+image: privacybydesign/node_yarn:latest
+
+stages:
+  - build
+
+before_script:
+  - set -euxo pipefail
+  - apt-get update
+  - apt-get install -y --no-install-recommends php composer
+
+build:
+  stage: build
+  script:
+    - composer install
+    - yarn install
+  artifacts:
+    paths:
+      - data/*
+      - www/*
