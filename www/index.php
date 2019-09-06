@@ -7,8 +7,6 @@
   <meta name="keywords" content="IRMA, IRMATube, film, privacy, security">
   <meta name="description" content="Experimental IRMATube video streaming service">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="irma-web-server" value="https://privacybydesign.foundation/tomcat/irma_api_server/server/">
-  <meta name="irma-api-server" value="https://privacybydesign.foundation/tomcat/irma_api_server/api/v2/">
 
   <title>IRMATube - Watch movies without others noticing it!</title>
 
