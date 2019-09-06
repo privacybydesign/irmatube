@@ -7,14 +7,15 @@ before_script:
   - set -euxo pipefail
   - apt-get update
   - apt-get install -y --no-install-recommends php composer
+  - cd www
+  - composer install
+  - yarn install
+  - cd ..
 
 build:
   stage: build
   script:
-    - cd www
-    - composer install
-    - yarn install
+    - ./build.sh
   artifacts:
     paths:
-      - data/*
-      - www/*
+      - build/*
