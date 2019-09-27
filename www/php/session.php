@@ -10,9 +10,9 @@ function start_session($sessionrequest) {
     $api_call = array(
         $protocol => array(
             'method' => 'POST',
-            'header' => 'Content-type: application/json\r\n'
-                . 'Content-Length: ' . strlen($jsonsr) . '\r\n'
-                . 'Authorization: ' . IRMA_SERVER_API_TOKEN . '\r\n',
+            'header' => "Content-type: application/json\r\n"
+                . "Content-Length: " . strlen($jsonsr) . "\r\n"
+                . "Authorization: " . IRMA_SERVER_API_TOKEN . "\r\n",
             'content' => $jsonsr
         )
     );
