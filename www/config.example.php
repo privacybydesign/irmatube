@@ -7,6 +7,8 @@ define('IRMA_SERVER_URL', 'http://localhost:8088');
 define('IRMA_SERVER_PUBLICKEY', 'pk.pem');
 define('IRMA_SERVER_API_TOKEN', '');
 
+define('IRMATUBE_CREDENTIAL_ID', 'irma-demo.IRMATube.member');
+
 $language = 'en';
 
 $movies = array("django", "elysium", "oblivion", "olympus-has-fallen",

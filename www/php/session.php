@@ -33,7 +33,7 @@ function start_issuance_session() {
     return start_session([
         "@context" => "https://irma.app/ld/request/issuance/v2",
         "credentials" => [[
-            "credential" => "pbdf.pbdf.irmatube",
+            "credential" => IRMATUBE_CREDENTIAL_ID,
             "validity" => strtotime("+6 months"),
             "attributes" => [
                 "type" => "regular",
@@ -46,7 +46,7 @@ function start_issuance_session() {
 function start_verification_session($age = null) {
     $attrs = [
         [
-            [ "pbdf.pbdf.irmatube.type" ]
+            [ IRMATUBE_CREDENTIAL_ID . ".type" ]
         ]
     ];
     if ($age != null) {

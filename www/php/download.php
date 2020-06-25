@@ -51,7 +51,7 @@ try {
 $disclosed = (array) $decoded->disclosed;
 
 function isMember($disclosed) {
-    $member_key = "pbdf.pbdf.irmatube.type";
+    $member_key = IRMATUBE_CREDENTIAL_ID . ".type";
     foreach ($disclosed as $con) {
         foreach ($con as $attr) {
             if ($attr->id == $member_key) {
