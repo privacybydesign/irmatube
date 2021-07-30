@@ -55,7 +55,7 @@ function isMember($disclosed) {
     foreach ($disclosed as $con) {
         foreach ($con as $attr) {
             if ($attr->id == $member_key) {
-                return $attr->rawvalue == "regular";
+                return $attr->rawvalue === "regular" || $attr->rawvalue === "premium";
             }
         }
     }
