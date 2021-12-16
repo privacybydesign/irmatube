@@ -20,7 +20,7 @@
   <script src="node_modules/bootstrap/dist/js/bootstrap.min.js" type="text/javascript"></script>
   <script src="content/movies.js" type="text/javascript"></script>
 
-  <script src="node_modules/@privacybydesign/irmajs/dist/irma.js" type="text/javascript" async></script>
+  <script src="node_modules/@privacybydesign/irma-frontend/dist/irma.js" type="text/javascript" async></script>
 
   <script id="moviePlayerTpl" type="text/template">
     <div class="modal fade" tabindex="-1" role="dialog" id="video_div_{{id}}">
@@ -78,8 +78,8 @@
                            + msg + '</div>');
     }
 
-    function onVerifyFailure(data) {
-      if(data === 'CANCELLED')
+    function onIrmaFailure(data) {
+      if(data === 'Aborted')
         showWarning(data);
       else
         showError(data);
@@ -92,17 +92,18 @@
           showSuccess("You are now registered for IRMATube");
       };
 
-      $.get({
-        url: "php/session.php?type=issuance&" + Math.random(), // Append randomness so that IE doesn't consider it 304 not modified
-        success: function(sessionJson) {
-          let session = JSON.parse(sessionJson);
-          let options = {
-              language: '<?= $language ?>',
-          };
-          let promise = irma.handleSession(session.sessionPtr, options);
-          promise.then(onIssuanceSuccess, onVerifyFailure);
-        }
-      });
+      irma.newPopup({
+        language: '<?= $language ?>',
+        session: {
+          start: {
+            // Append randomness so that IE doesn't consider it 304
+            url: () => "php/session.php?type=issuance&" + Math.random(),
+          },
+          result: false,
+        },
+      })
+        .start()
+        .then(onIssuanceSuccess, onIrmaFailure);
     }
 
     function openMovie(videoNumber, ageLimit) {
@@ -132,20 +133,20 @@
         url += "&age=" + ageLimit;
       url += "&" + Math.random(); // Append randomness so that IE doesn't consider it 304 not modified
 
-      $.get({
-        url: url,
-        success: function(sessionJson) {
-          let session = JSON.parse(sessionJson);
-          let options = {
-              language: '<?= $language ?>',
-              token: session.token,
-              server: session.sessionPtr.u.split('/irma')[0],
-              resultJwt: true,
-          };
-          let promise = irma.handleSession(session.sessionPtr, options);
-          promise.then(onVerifySuccess, onVerifyFailure);
-        }
-      });
+      irma.newPopup({
+        language: '<?= $language ?>',
+        session: {
+          start: {
+            url: () => url,
+          },
+          result: {
+            url: (o, {sessionPtr, sessionToken}) => `${sessionPtr.u.split('/irma')[0]}/session/${sessionToken}/result-jwt`,
+            parseResponse: (r) => r.text(),
+          },
+        },
+      })
+        .start()
+        .then(onVerifySuccess, onIrmaFailure);
     }
 
     function closeMovie(videoNumber) {
