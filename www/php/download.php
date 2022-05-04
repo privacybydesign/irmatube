@@ -79,11 +79,18 @@ function isAgeAllowed($file_path, $disclosed) {
     $age_key_pbdf = "pbdf.pbdf.ageLimits.over" . $age_restriction;
     $age_key_nijmegen = "pbdf.nijmegen.ageLimits.over" . $age_restriction;
     $age_key_gemeente = "pbdf.gemeente.personalData.over" . $age_restriction;
+    $age_key_idcard = "pbdf.pilot-amsterdam.idcard.over" . $age_restriction;
+    $age_key_passport = "pbdf.pilot-amsterdam.passport.over" . $age_restriction;
 
     foreach ($disclosed as $con) {
         foreach ($con as $attr) {
-            if ($attr->id == $age_key_pbdf || $attr->id == $age_key_nijmegen || $attr->id == $age_key_gemeente) {
-                return strtolower($attr->rawvalue) == "yes";
+            if ($attr->id == $age_key_pbdf
+                || $attr->id == $age_key_nijmegen
+                || $attr->id == $age_key_gemeente
+                || $attr->id == $age_key_idcard
+                || $attr->id == $age_key_passport
+            ) {
+                return strtolower($attr->rawvalue) == "yes" || strtolower($attr->rawvalue) == "ja";
             }
         }
     }

@@ -54,6 +54,8 @@ function start_verification_session($age = null) {
             ["pbdf.pbdf.ageLimits.over" . $age],
             ["pbdf.nijmegen.ageLimits.over" . $age ],
             ["pbdf.gemeente.personalData.over" . $age ],
+            ["pbdf.pilot-amsterdam.idcard.over" . $age ],
+            ["pbdf.pilot-amsterdam.passport.over" . $age ],
         ];
     }
     return start_session([
