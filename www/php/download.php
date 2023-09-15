@@ -3,6 +3,7 @@ require_once '../vendor/autoload.php';
 require_once '../config.php';
 require_once 'range_serve.php';
 use \Firebase\JWT\JWT;
+use \Firebase\JWT\Key;
 
 // Stream the specified file, if it exists, and if the IRMA JWT:
 // - is validly signed by the API server;
@@ -43,7 +44,7 @@ $token = $_REQUEST['token'];
 // We want the movies to continue playing for an hour
 JWT::$leeway = 60 * 60;
 try {
-    $decoded = JWT::decode($token, $jwt_pk, array('RS256'));
+    $decoded = JWT::decode($token, new Key($jwt_pk, 'RS256'));
 } catch (Exception $e) {
     header("HTTP/1.0 403 Forbidden");
     exit;
