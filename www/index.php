@@ -4,11 +4,11 @@
 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <meta name="keywords" content="IRMA, IRMATube, film, privacy, security">
-  <meta name="description" content="Experimental IRMATube video streaming service">
+  <meta name="keywords" content="Yivi, YiviTube, film, privacy, security">
+  <meta name="description" content="Experimental YiviTube video streaming service">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>IRMATube - Watch movies without others noticing it!</title>
+  <title>YiviTube - Watch movies without others noticing it!</title>
 
   <link href="css/mosaic.css" rel="stylesheet" type="text/css" />
   <link href="css/irmatube.css" rel="stylesheet" type="text/css" />
@@ -20,7 +20,7 @@
   <script src="node_modules/bootstrap/dist/js/bootstrap.min.js" type="text/javascript"></script>
   <script src="content/movies.js" type="text/javascript"></script>
 
-  <script src="node_modules/@privacybydesign/irma-frontend/dist/irma.js" type="text/javascript" async></script>
+  <script src="node_modules/@privacybydesign/yivi-frontend/dist/yivi.js" type="text/javascript" async></script>
 
   <script id="play-ytvideo" type="text/template">
     <div class="modal fade" tabindex="-1" role="dialog" id="video_div_{{id}}">
@@ -88,10 +88,10 @@
       console.log("Registring for IRMAtube");
       $("#alert_box").empty();
       let onIssuanceSuccess = function() {
-          showSuccess("You are now registered for IRMATube");
+          showSuccess("You are now registered for YiviTube");
       };
 
-      irma.newPopup({
+      yivi.newPopup({
         language: '<?= $language ?>',
         session: {
           start: {
@@ -166,7 +166,7 @@
         url += "&age=" + ageLimit;
       url += "&" + Math.random(); // Append randomness so that IE doesn't consider it 304 not modified
 
-      irma.newPopup({
+      yivi.newPopup({
         language: '<?= $language ?>',
         session: {
           start: {
@@ -224,11 +224,11 @@
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal"
             aria-hidden="true">×</button>
-          <h4 class="modal-title" id="registerModalLabel">Register for IRMATube</h4>
+          <h4 class="modal-title" id="registerModalLabel">Register for YiviTube</h4>
         </div>
         <div class="modal-body">
           <p>
-          You can now register for IRMATube using your IRMA Token. You will get access to:
+          You can now register for YiviTube using your IRMA Token. You will get access to:
           <ol>
             <li>Eight splendid movie-trailers</li>
             <li>Automatic IRMA age verification</li>
@@ -250,21 +250,21 @@
   <div class="container">
     <div id="irmaTubeHeading" class="row">
       <div class="col-md-3">
-        <a href="/demo"><img src="img/IRMATube_logo.png" width="200"/></a>
+        <a href="/demo"><img src="img/YiviTube_logo.png" width="200"/></a>
       </div>
       <div class="col-md-7">
         <div id="alert_box">
         </div>
       </div>
       <div class="col-md-2">
-        <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#registerModal">Register</button>
+      <button class="btn pull-right" style="background-color: darkred; color: white;" data-toggle="modal" data-target="#registerModal">Register</button>
       </div>
     </div>
     <div class="row">
       <div class="col-md-12">
         <div>
-          <img src="img/arrows_blue_animated.gif" id="arrow" />
-          IRMATube is the privacy-friendly video-streaming service
+          <img src="img/arrow_red.png" id="arrow" />
+          YiviTube is the privacy-friendly video-streaming service
         </div>
       </div>
     </div>

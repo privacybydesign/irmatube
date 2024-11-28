@@ -17,7 +17,7 @@ cp --parents -r www/vendor build
 cp --parents www/config.* build
 cp --parents www/explanation-* build
 cp --parents www/index.php build
-cp --parents www/node_modules/@privacybydesign/irma-frontend/dist/irma.js build
+cp --parents www/node_modules/@privacybydesign/yivi-frontend/dist/yivi.js build
 cp -r --parents www/node_modules/bootstrap/dist build
 cp --parents www/node_modules/jquery/dist/jquery.min.js build
 cp --parents www/node_modules/mustache/mustache.min.js build
