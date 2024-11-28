@@ -1,4 +1,4 @@
-<?php require_once "config.php" ?>
+<?php require_once "config.php"?>
 <!DOCTYPE html>
 <html lang="<?= $language ?>">
 
@@ -22,24 +22,23 @@
 
   <script src="node_modules/@privacybydesign/irma-frontend/dist/irma.js" type="text/javascript" async></script>
 
-  <script id="moviePlayerTpl" type="text/template">
+  <script id="play-ytvideo" type="text/template">
     <div class="modal fade" tabindex="-1" role="dialog" id="video_div_{{id}}">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <video controls="controls" preload="none" id="video_{{id}}">
-                        <source src="{{url}}?file={{id}}.webm&token={{token}}" type="video/webm">
-                        <source src="{{url}}?file={{id}}.mp4&token={{token}}" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" onclick="closeMovie('{{id}}')">Close</button>
-                </div>
-            </div>
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-body">
+            <iframe 
+                    src="https://www.youtube-nocookie.com/embed/{{youtubeId}}"
+            ></iframe>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" onclick="closeMovie('{{id}}')">Close</button>
+          </div>
         </div>
+      </div>
     </div>
   </script>
+
   <script id="movieTpl" type="text/template">
     <div id="movie_{{id}}_wrapper">
     <div class="mosaic-block bar" id="movie_{{id}}">
@@ -51,7 +50,7 @@
       </span>
 
       <div class="mosaic-backdrop">
-        <img alt="{{title}}" src="content/{{id}}.jpg">
+        <img alt="{{title}}" src="content/covers/{{id}}.jpg">
       </div>
     </div>
     </div>
@@ -110,22 +109,56 @@
       console.log("Playing movie", videoNumber, ageLimit);
       $("#alert_box").empty();
 
-      let onVerifySuccess = function(data) {
-        console.log(data);
+      let onVerifySuccess = function (data) {
+        console.log("IRMA Session data:", data);
 
-        let videoData = {
-          id: videoNumber,
-          token: data,
-          url: "php/download.php"
-        };
+        fetch("php/verifysession.php", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          //cannot pass the age limit here, as the request could be tampered with
 
-        let video_template = $("#moviePlayerTpl").html();
-        $("#moviebox").html(Mustache.to_html(video_template, videoData));
+          body: JSON.stringify({
+            token: data,
+            videoid: videoNumber,
+          }),
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("HTTP error, status = " + response.status);
+            }
+            return response.json();
+          })
+          .then((result) => {
+            console.log("Result from PHP script:", result);
 
-        $("#video_div_" + videoNumber).modal('show');
-        $("#video_div_" + videoNumber).css("display", "block");
-        $("#video_" + videoNumber).get(0).load();
-        $("#video_" + videoNumber).get(0).play();
+            if (result.success) {
+              // Find the movie in IRMATubeMovies
+              let movie = IRMATubeMovies.find((m) => m.id === videoNumber);
+              if (!movie) {
+                console.error("Movie not found for ID:", videoNumber);
+                $(`#movie_${videoNumber}_player`).html(
+                  "<p>Error: Movie not found.</p>"
+                );
+                return;
+              }
+
+              let videoData = {
+                id: movie.id,
+                youtubeId: result.youtubeId,
+              };
+
+              let html = Mustache.render($("#play-ytvideo").html(), videoData);
+              $("body").append(html);
+              $("#video_div_" + videoData.id).modal("show");
+            } else {
+              console.warn("Verification failed:", result.message);
+              $(`#movie_${videoNumber}_player`).html(
+                `<p>${result.message || "Verification failed."}</p>`
+              );
+            }
+          })
       };
 
       let url = "php/session.php?type=verification";
@@ -148,12 +181,20 @@
         .start()
         .then(onVerifySuccess, onIrmaFailure);
     }
-
+    //makes sure the youtube video stops playing when the modal is closed
     function closeMovie(videoNumber) {
-      $("#video_div_" + videoNumber).modal('hide');
-      $("#video_" + videoNumber).get(0).pause();
+      const modal = document.getElementById(`video_div_${videoNumber}`);
+      if (modal) {
+        const iframe = modal.querySelector('iframe');
+        if (iframe) {
+          iframe.src = ''; 
+        }
+        $(modal).modal('hide'); 
+        modal.parentNode.removeChild(modal); 
+      }
     }
 
+    //uses movie.js to populate movie gallery
     $(function() {
       let template = $("#movieTpl").html();
       IRMATubeMovies.sort(function() { return 0.5 - Math.random();});
