@@ -53,7 +53,7 @@ function isMember($disclosed) {
     return false;
 }
 
-function getAgeRestriction(){
+function getAgeRestriction(string $videoid){
     $json = file_get_contents(ROOT_DIR . "videos/" . $videoid . ".json");
     $data = json_decode($json);
     return $data->ageRestriction;
@@ -67,7 +67,7 @@ function getYTid($videoid){
 }
 
 function isAgeAllowed($videoid, $disclosed) {
-    $age_restriction= getAgeRestriction();
+    $age_restriction= getAgeRestriction($videoid);
 
     //if movie has no age restriction, no need to check for age credentials in the disclosed attributes
     if ($age_restriction == 0) {
