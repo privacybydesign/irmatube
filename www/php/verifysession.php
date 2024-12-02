@@ -25,8 +25,7 @@ if (!isset($data['videoid']) || empty($data['videoid'])) {
     exit;
 }
 
-$jwt_pk = file_get_contents(ROOT_DIR . IRMA_SERVER_PUBLICKEY);
-
+$jwt_pk = file_get_contents(IRMA_SERVER_URL . '/publickey');
 $token = $data['token'];
 $videoid = $data['videoid'];
 
