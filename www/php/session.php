@@ -3,12 +3,11 @@ require_once '../vendor/autoload.php';
 require_once '../config.php';
 
 function start_session($sessionrequest) {
-    $protocol = explode(':', IRMA_SERVER_URL, 2)[0];
 
     $jsonsr = json_encode($sessionrequest);
 
     $api_call = array(
-        $protocol => array(
+        'http' => array(
             'method' => 'POST',
             'header' => "Content-type: application/json\r\n"
                 . "Content-Length: " . strlen($jsonsr) . "\r\n"
@@ -19,7 +18,7 @@ function start_session($sessionrequest) {
 
     $resp = file_get_contents(IRMA_SERVER_URL . '/session', false, stream_context_create($api_call));
     if (! $resp) {
-        error();
+        trigger_error("Failed to start session", E_USER_ERROR);
     }
     return $resp;
 }
@@ -64,7 +63,7 @@ function start_verification_session($age = null) {
     ]);
 }
 
-if(!isset($_REQUEST['type']) || empty($_REQUEST['type'])) {
+if(empty($_REQUEST['type'])) {
     header("HTTP/1.0 400 Bad Request");
     exit;
 }
@@ -75,7 +74,7 @@ switch ($type) {
         echo start_issuance_session();
         break;
     case "verification":
-        $age = $_REQUEST['age'];
+        $age = isset($_REQUEST['age'])  ? $_REQUEST['age'] : null;
         if ($age != null && !ctype_digit($age)) {
             header("HTTP/1.0 400 Bad Request");
             exit;

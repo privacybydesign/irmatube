@@ -1,45 +1,34 @@
 <?php
 require_once '../vendor/autoload.php';
 require_once '../config.php';
-require_once 'range_serve.php';
 use \Firebase\JWT\JWT;
 use \Firebase\JWT\Key;
 
-// Stream the specified file, if it exists, and if the IRMA JWT:
-// - is validly signed by the API server;
-// - specifies that the user had the membership attribute and if necessary, the applicable age attribute.
+// This script checks JWT validity and presense of irmatube membership and checks age restriction provided in videoid.json to see if ageover.agerestiction is present in the disclosed attributes
+// only if these are true, it returns the youtubeId of the video
 
-if(!isset($_REQUEST['file']) || empty($_REQUEST['file']))
-{
+
+// token and videoid are passed in the body of the request
+$json = file_get_contents('php://input');
+$data = json_decode($json, true);
+
+
+if (!isset($data['token']) || empty($data['token'])) {
+    echo "No token provided";
     header("HTTP/1.0 400 Bad Request");
     exit;
 }
 
-if(!isset($_REQUEST['token']) || empty($_REQUEST['token']))
-{
+if (!isset($data['videoid']) || empty($data['videoid'])) {
+    echo "No videoid provided";
     header("HTTP/1.0 400 Bad Request");
     exit;
 }
-
-// sanitize the file request, keep just the name and extension
-$file_path  = $_REQUEST['file'];
-$path_parts = pathinfo($file_path);
-$base_name  = $path_parts['basename'];
-$file_name  = $path_parts['filename'];
-$file_ext   = $path_parts['extension'];
-
-// Limit ourselves the an explicit set of filenames, just a safety measure
-if (!in_array($file_name, $movies)) {
-    header("HTTP/1.0 404 Not Found");
-    exit;
-}
-
-$base_path = ROOT_DIR . "videos/" . $base_name;
-$file_path = ROOT_DIR . "videos/" . $file_name;
 
 $jwt_pk = file_get_contents(ROOT_DIR . IRMA_SERVER_PUBLICKEY);
 
-$token = $_REQUEST['token'];
+$token = $data['token'];
+$videoid = $data['videoid'];
 
 // We want the movies to continue playing for an hour
 JWT::$leeway = 60 * 60;
@@ -64,16 +53,24 @@ function isMember($disclosed) {
     return false;
 }
 
-function isAgeAllowed($file_path, $disclosed) {
-    if(!isset($file_path) || !isset($disclosed)) {
-        return false;
-    }
+function getAgeRestriction(string $videoid){
+    $json = file_get_contents(ROOT_DIR . "videos/" . $videoid . ".json");
+    $data = json_decode($json);
+    return $data->ageRestriction;
+}
 
-    $age_file = file($file_path . ".access");
-    $age_restriction = intval(trim($age_file[0]));
+function getYTid($videoid){
+    $json = file_get_contents(ROOT_DIR . "videos/" . $videoid . ".json");
+    $data = json_decode($json);
+    return $data->youtubeId;
 
-    if($age_restriction == 0) {
-        // Movie has no age restriction
+}
+
+function isAgeAllowed($videoid, $disclosed) {
+    $age_restriction= getAgeRestriction($videoid);
+
+    //if movie has no age restriction, no need to check for age credentials in the disclosed attributes
+    if ($age_restriction == 0) {
         return true;
     }
 
@@ -99,10 +96,15 @@ function isAgeAllowed($file_path, $disclosed) {
     return false;
 }
 
-if( isAgeAllowed($file_path, $disclosed) && isMember($disclosed) ) {
-    range_serve($base_path);
+
+if( isAgeAllowed($videoid, $disclosed) && isMember($disclosed) ) {
+    $youtubeId = getYTid($videoid);
+    echo json_encode(['success' => true, 'youtubeId' => $youtubeId]);
+    http_response_code(200);
 } else {
-    header("HTTP/1.0 403 Forbidden");
+    echo json_encode(['success' => false]);
+    http_response_code(403);
+
     exit;
 }
 
