@@ -103,7 +103,7 @@ if( isAgeAllowed($videoid, $disclosed) && isMember($disclosed) ) {
     http_response_code(200);
 } else {
     echo json_encode(['success' => false]);
-    header("HTTP/1.0 403 Forbidden");
+    http_response_code(403);
 
     exit;
 }
