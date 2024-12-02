@@ -1,8 +1,8 @@
 IRMATubeMovies = [
 	// Per movie need the following files:
-	//  * Cover image: mov1.jpg
-	//  * Movie in mp4: mov1.mp4
-	//  * Movie in webm: mov1.webm
+	//  * Cover image: mov1.jpg in www/content/covers
+	//  * movie.json in data/videos (see example of provided movies)
+
 	{
 		title: "Djanngo Unchained",
 		id: "django",
