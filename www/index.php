@@ -224,14 +224,14 @@
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal"
             aria-hidden="true">×</button>
-          <h4 class="modal-title" id="registerModalLabel">Register for YiviTube</h4>
+              <h4 id="registerModalLabel"> Register for YiviTube </h4>
         </div>
         <div class="modal-body">
           <p>
-          You can now register for YiviTube using your IRMA Token. You will get access to:
+          You can now register for YiviTube using your Yivi identity wallet. You will get access to:
           <ol>
             <li>Eight splendid movie-trailers</li>
-            <li>Automatic IRMA age verification</li>
+            <li>Automatic Yivi age verification</li>
           </ol>
           Best of all, it is totally
           </p>
@@ -241,7 +241,7 @@
         </div>
         <div class="modal-footer">
           <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-          <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true" id="IRMARegister">Register using IRMA</button>
+          <button class="btn" style="background-color: darkred; color: white;" data-toggle="modal" aria-hidden="true" id="IRMARegister">Register using Yivi</button>
         </div>
       </div>
     </div>
