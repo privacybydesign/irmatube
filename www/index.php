@@ -241,7 +241,7 @@
         </div>
         <div class="modal-footer">
           <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-          <button class="btn" style="background-color: darkred; color: white;" data-toggle="modal" aria-hidden="true" id="IRMARegister">Register using Yivi</button>
+          <button class="btn" style="background-color: darkred; color: white;" data-dismiss="modal"  aria-hidden="true" id="IRMARegister">Register using Yivi</button>
         </div>
       </div>
     </div>
