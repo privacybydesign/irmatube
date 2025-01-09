@@ -1,6 +1,8 @@
 name: Delivery
 
 on: 
+  pull_request:
+    types: [synchronize, opened, reopened]
   push:
     branches: [ master ]
   release:
@@ -34,10 +36,29 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}      
       
-      - name: Build container and push to GitHub Container Registry
+      - name: Build container and export to local Docker
         uses: docker/build-push-action@v5
         with:
           context: .
-          push: true
+          load: true
+          tags: local/yivitube:scan
+      
+      - name: Scan Image
+        uses: anchore/scan-action@v3
+        id: scan
+        with:
+          image: local/yivitube:scan
+          fail-build: true
+          output-format: sarif
+  
+      - name: Upload Anchore Scan SARIF Report
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: ${{ steps.scan.outputs.sarif }}
+      
+      - name: Push image to GitHub Container Registry
+        uses: docker/build-push-action@v5
+        with:
+          push: github.event_name != 'pull_request'
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
