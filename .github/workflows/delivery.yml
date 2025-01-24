@@ -43,6 +43,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
+          load: true
           tags: local/yivitube:scan
           cache-from: type=gha
           cache-to: type=gha,mode=max
