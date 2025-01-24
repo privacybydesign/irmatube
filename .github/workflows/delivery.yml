@@ -1,13 +1,13 @@
 name: Delivery
 
-on: 
+on:
   pull_request:
     types: [synchronize, opened, reopened]
   push:
-    branches: [ master ]
+    branches: [master]
   release:
     # Note: a current limitation is that when a release is edited after publication, then the Docker tags are not automatically updated.
-    types: [ published ]
+    types: [published]
 
 permissions:
   contents: write
@@ -34,15 +34,15 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}      
-      
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Build container and export to local Docker
         uses: docker/build-push-action@v5
         with:
           context: .
           load: true
           tags: local/yivitube:scan
-      
+
       - name: Scan Image
         uses: anchore/scan-action@v3
         id: scan
@@ -50,7 +50,8 @@ jobs:
           image: local/yivitube:scan
           fail-build: true
           output-format: table
-      
+          only-fixed: true
+
       - name: Push image to GitHub Container Registry
         uses: docker/build-push-action@v5
         with:
