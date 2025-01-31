@@ -53,7 +53,7 @@ jobs:
         id: scan
         with:
           image: local/yivitube:scan
-          only-fixed: true
+          # only-fixed: true
           fail-build: true
           output-format: sarif
 
