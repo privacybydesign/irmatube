@@ -54,7 +54,7 @@ jobs:
         with:
           images: ghcr.io/${{ github.repository }}
           tags: |
-            type=semver,pattern=v{{major}}.{{minor}}.{{patch}}
+            type=semver,pattern={{major}}.{{minor}}.{{patch}}
             type=edge,enable=${{ needs.prepare.outputs.is-head-main == 'true' }}
             type=raw,value=latest,enable=${{ needs.prepare.outputs.is-latest-release == 'true' }}
 
