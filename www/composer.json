@@ -3,7 +3,7 @@
     "description": "IRMA demo showing issuance and verification of IRMA attributes",
     "type": "project",
     "require": {
-        "firebase/php-jwt": "6.0.0",
+        "firebase/php-jwt": "6.11.0",
         "ext-json": "*",
         "ext-ctype": "*"
     },
@@ -11,7 +11,7 @@
     "authors": [
         {
             "name": "Privacy by Design Foundation",
-            "email": "irma@privacybydesign.foundation"
+            "email": "support@yivi.app"
         }
     ]
 }

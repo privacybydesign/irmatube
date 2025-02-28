@@ -1,35 +1,32 @@
-FROM node:14 AS builder
+FROM node:18 AS node
 
-RUN apt-get update && apt-get install -y \
-    php \
-    php-cli \
-    php-zip \
-    php-xml \
-    php-mbstring \
-    php-curl \
-    php-sqlite3 \
-    php-ldap \
-    unzip \
-    cron
+WORKDIR /build
 
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-WORKDIR /app
+COPY www/package*.json .
 
-COPY . .
+RUN npm i
 
-RUN cd /app/www && npm install
-RUN cd /app/www && composer install
+# ---
 
-FROM php:8.0-apache
+FROM composer:latest AS composer
+FROM dunglas/frankenphp
 
-COPY --from=builder /app/www /var/www/html
-COPY --from=builder /app/data /app/data
+ENV SERVER_NAME=:8080
+ENV DEBIAN_FRONTEND=noninteractive
 
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html
+# Enable PHP production settings
+RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" \
+    && apt update && apt upgrade -y \
+    && install-php-extensions zip
 
+COPY ./data /app/data
+COPY ./www /app/public
 
-RUN echo "Listen 8080" >> /etc/apache2/ports.conf
+COPY --from=composer /usr/bin/composer /usr/local/bin/composer
+COPY --from=node /build/node_modules /app/public/node_modules
+
+RUN cd /app/public \
+    && composer install --no-interaction --optimize-autoloader --no-dev
 
 EXPOSE 8080
 
