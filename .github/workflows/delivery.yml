@@ -23,6 +23,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Check whether this event is the HEAD of main
+        continue-on-error: true
+        id: is-head-main
+        run: git rev-parse HEAD | grep -x ${{ github.sha }}
+        shell: bash
+
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v5
@@ -30,7 +36,7 @@ jobs:
           images: ghcr.io/${{ github.repository }}
           tags: |
             type=semver,pattern={{major}}.{{minor}}.{{patch}}
-            type=raw,value=edge
+            type=edge,enable=${{ steps.is-head-main.outcome == 'success' }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
