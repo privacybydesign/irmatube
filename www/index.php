@@ -222,7 +222,7 @@
     <div class="modal-dialog modal-sm">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal"
+          <button type="button" class="close" data-bs-dismiss="modal"
             aria-hidden="true">×</button>
               <h4 id="registerModalLabel"> Register for YiviTube </h4>
         </div>
@@ -240,8 +240,8 @@
           </p>
         </div>
         <div class="modal-footer">
-          <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-          <button class="btn" style="background-color: darkred; color: white;" data-dismiss="modal"  aria-hidden="true" id="IRMARegister">Register using Yivi</button>
+          <button class="btn" data-bs-dismiss="modal" aria-hidden="true">Cancel</button>
+          <button class="btn" style="background-color: darkred; color: white;" data-bs-dismiss="modal"  aria-hidden="true" id="IRMARegister">Register using Yivi</button>
         </div>
       </div>
     </div>
@@ -257,7 +257,7 @@
         </div>
       </div>
       <div class="col-md-2">
-      <button class="btn pull-right" style="background-color: darkred; color: white;" data-toggle="modal" data-target="#registerModal">Register</button>
+      <button class="btn pull-right" style="background-color: darkred; color: white;" data-bs-toggle="modal" data-bs-target="#registerModal">Register</button>
       </div>
     </div>
     <div class="row">
