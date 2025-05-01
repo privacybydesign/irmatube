@@ -9,7 +9,7 @@ RUN npm i
 # ---
 
 FROM composer:latest AS composer
-FROM dunglas/frankenphp
+FROM dunglas/frankenphp:latest
 
 ENV SERVER_NAME=:8080
 ENV DEBIAN_FRONTEND=noninteractive
