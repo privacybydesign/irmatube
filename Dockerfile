@@ -1,4 +1,4 @@
-FROM node:18 AS node
+FROM node:24 AS node
 
 WORKDIR /build
 
@@ -9,7 +9,7 @@ RUN npm i
 # ---
 
 FROM composer:latest AS composer
-FROM dunglas/frankenphp:1.11.2
+FROM dunglas/frankenphp:1.12.3-php8.5
 
 ENV SERVER_NAME=:8080
 ENV DEBIAN_FRONTEND=noninteractive
