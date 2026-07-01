@@ -15,7 +15,6 @@ services:
       - IRMATUBE_CREDENTIAL_ID=irma-demo.IRMATube.member
     volumes:
     - ./data:/data
-
       
   irma:
     build: https://github.com/privacybydesign/irmago.git
@@ -26,11 +25,7 @@ services:
       - app-network
     volumes:
       - ./data:/data
-
-
     
 networks:
   app-network:
     driver: bridge
-
-
