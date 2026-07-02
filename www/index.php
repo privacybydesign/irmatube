@@ -202,7 +202,7 @@
       for ( let i = 0; i < IRMATubeMovies.length; i++) {
         movie = IRMATubeMovies[i];
         console.log(movie);
-        $("#movies").append(Mustache.to_html(template, movie));
+        $("#movies").append(Mustache.render(template, movie));
         $("#movie_" + movie.id).mosaic({
           animation : 'slide'
         });
