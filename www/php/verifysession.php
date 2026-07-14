@@ -14,14 +14,14 @@ $data = json_decode($json, true);
 
 
 if (!isset($data['token']) || empty($data['token'])) {
-    echo "No token provided";
-    header("HTTP/1.0 400 Bad Request");
+    http_response_code(400);
+    echo json_encode(['success' => false, 'message' => 'No token provided']);
     exit;
 }
 
 if (!isset($data['videoid']) || empty($data['videoid'])) {
-    echo "No videoid provided";
-    header("HTTP/1.0 400 Bad Request");
+    http_response_code(400);
+    echo json_encode(['success' => false, 'message' => 'No videoid provided']);
     exit;
 }
 
@@ -97,13 +97,12 @@ function isAgeAllowed($videoid, $disclosed) {
 
 
 if( isAgeAllowed($videoid, $disclosed) && isMember($disclosed) ) {
+    http_response_code(200);
     $youtubeId = getYTid($videoid);
     echo json_encode(['success' => true, 'youtubeId' => $youtubeId]);
-    http_response_code(200);
 } else {
-    echo json_encode(['success' => false]);
     http_response_code(403);
-
+    echo json_encode(['success' => false]);
     exit;
 }
 
