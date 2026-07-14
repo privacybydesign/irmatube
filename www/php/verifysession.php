@@ -34,7 +34,7 @@ JWT::$leeway = 60 * 60;
 try {
     $decoded = JWT::decode($token, new Key($jwt_pk, 'RS256'));
 } catch (Exception $e) {
-    header("HTTP/1.0 403 Forbidden");
+    http_response_code(403);
     exit;
 }
 $disclosed = (array) $decoded->disclosed;
