@@ -29,12 +29,11 @@ $jwt_pk = file_get_contents(IRMA_SERVER_PUBLICKEY);
 $token = $data['token'];
 $videoid = $data['videoid'];
 
-// Only known video ids may be used to build a file path. $movies is the
-// allowlist defined in config.php; reject anything else so the value cannot
-// be used to read files outside the videos directory.
+// Only known video ids are accepted. $movies is the allowlist defined in
+// config.php; reject anything not on it.
 if (!is_string($videoid) || !in_array($videoid, $movies, true)) {
+    http_response_code(400);
     echo json_encode(['success' => false]);
-    header("HTTP/1.0 400 Bad Request");
     exit;
 }
 
