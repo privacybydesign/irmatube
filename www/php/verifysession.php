@@ -29,6 +29,14 @@ $jwt_pk = file_get_contents(IRMA_SERVER_PUBLICKEY);
 $token = $data['token'];
 $videoid = $data['videoid'];
 
+// Only known video ids are accepted. $movies is the allowlist defined in
+// config.php; reject anything not on it.
+if (!is_string($videoid) || !in_array($videoid, $movies, true)) {
+    http_response_code(400);
+    echo json_encode(['success' => false]);
+    exit;
+}
+
 // We want the movies to continue playing for an hour
 JWT::$leeway = 60 * 60;
 try {
