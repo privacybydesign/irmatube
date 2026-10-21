@@ -1,31 +1,37 @@
-FROM node:24 AS node
+FROM node:24 AS libs
 
 WORKDIR /build
 
-COPY www/package*.json .
+COPY package.json .
 
-RUN npm i
+RUN npm install --ignore-scripts \
+    && npm run build:libs
 
 # ---
 
-FROM composer:latest AS composer
-FROM dunglas/frankenphp:1.12.6-php8.5
+FROM golang:1.26.10 AS build
 
-ENV SERVER_NAME=:8080
-ENV DEBIAN_FRONTEND=noninteractive
+WORKDIR /build
 
-# Enable PHP production settings
-RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" \
-    && apt update && apt upgrade -y \
-    && install-php-extensions zip
+COPY go.mod go.sum ./
 
-COPY ./data /app/data
-COPY ./www /app/public
+RUN go mod download
 
-COPY --from=composer /usr/bin/composer /usr/local/bin/composer
-COPY --from=node /build/node_modules /app/public/node_modules
+COPY *.go ./
+COPY videos videos
+COPY static static
+COPY --from=libs /build/static/lib static/lib
 
-RUN cd /app/public \
-    && composer install --no-interaction --optimize-autoloader --no-dev
+RUN CGO_ENABLED=0 go build -trimpath -o /irmatube .
+
+# ---
+
+FROM gcr.io/distroless/static-debian12:nonroot
+
+COPY --from=build /irmatube /irmatube
+
+USER nonroot:nonroot
 
 EXPOSE 8080
+
+ENTRYPOINT ["/irmatube"]
