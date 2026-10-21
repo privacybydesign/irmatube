@@ -6,6 +6,7 @@ import (
 	"errors"
 	"io/fs"
 	"log"
+	"net"
 	"net/http"
 	"os"
 	"os/signal"
@@ -48,10 +49,25 @@ func main() {
 		IdleTimeout:       idleTimeout,
 	}
 
+	ln, err := net.Listen("tcp", listenAddr)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
 
+	log.Printf("listening on %s", listenAddr)
+	if err := serve(ctx, srv, ln); err != nil {
+		log.Fatal(err)
+	}
+}
+
+// serve runs srv on ln until ctx is done, then waits for in-flight requests.
+func serve(ctx context.Context, srv *http.Server, ln net.Listener) error {
+	shutdownDone := make(chan struct{})
 	go func() {
+		defer close(shutdownDone)
 		<-ctx.Done()
 
 		shutdownCtx, cancel := context.WithTimeout(context.Background(), shutdownTimeout)
@@ -62,8 +78,12 @@ func main() {
 		}
 	}()
 
-	log.Printf("listening on %s", listenAddr)
-	if err := srv.ListenAndServe(); !errors.Is(err, http.ErrServerClosed) {
-		log.Fatal(err)
+	if err := srv.Serve(ln); !errors.Is(err, http.ErrServerClosed) {
+		return err
 	}
+
+	// Serve returns as soon as Shutdown starts; wait for the drain.
+	<-shutdownDone
+
+	return nil
 }
