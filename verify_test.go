@@ -188,7 +188,7 @@ func TestVerifyDeniesAccess(t *testing.T) {
 	}
 }
 
-func TestVerifyAcceptsTokenWithinLeeway(t *testing.T) {
+func TestVerifyTokenWithinLeeway(t *testing.T) {
 	claims := resultClaimsFor(memberAttr("regular"))
 	claims["exp"] = time.Now().Add(-30 * time.Second).Unix()
 	token := signRS256(t, signingKey(), claims)
@@ -239,7 +239,7 @@ func TestVerifyRejectsBadRequests(t *testing.T) {
 	}
 }
 
-func TestVerifyChecksVideoBeforeToken(t *testing.T) {
+func TestVerifyVideoBeforeToken(t *testing.T) {
 	rec := do(newTestHandler(t, "http://irma.invalid"), http.MethodPost, verifyPath, verifyBody(t, "not-a-jwt", "nope"))
 
 	if rec.Code != http.StatusBadRequest {

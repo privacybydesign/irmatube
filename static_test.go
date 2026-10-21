@@ -79,7 +79,7 @@ func TestPublicAssetsAreServed(t *testing.T) {
 	}
 }
 
-func TestNonPublicFilesAreNotServed(t *testing.T) {
+func TestNonPublicFilesNotServed(t *testing.T) {
 	h := newTestHandler(t, "http://irma.invalid")
 
 	for _, target := range []string{
@@ -140,7 +140,7 @@ func TestDirectoriesAreNotListed(t *testing.T) {
 	}
 }
 
-func TestEmbeddedStaticFilesArePublic(t *testing.T) {
+func TestStaticFilesArePublic(t *testing.T) {
 	static, err := fs.Sub(staticFiles, "static")
 	if err != nil {
 		t.Fatal(err)

@@ -21,7 +21,7 @@ demo page and the two endpoints behind it. It replaced a PHP implementation.
 ## Gotchas
 
 - Only `static/` is served. Put nothing there that must stay private;
-  `TestEmbeddedStaticFilesArePublic` fails on other file types.
+  `TestStaticFilesArePublic` fails on other file types.
 - `videos/*.json` is both the allowlist of video ids and the source of the age
   limit and YouTube id. `static/content/movies.js` drives the UI and the age
   that is asked for, so keep both in sync.

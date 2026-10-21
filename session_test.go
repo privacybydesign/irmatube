@@ -71,7 +71,7 @@ func TestSessionIssuance(t *testing.T) {
 	}
 }
 
-func TestSessionIssuesDifferentMemberIDs(t *testing.T) {
+func TestSessionMemberIDsDiffer(t *testing.T) {
 	irma := newFakeIrma(t)
 
 	startSession(t, irma, http.MethodGet, "type=issuance")
@@ -186,7 +186,7 @@ func TestSessionRejectsBadRequests(t *testing.T) {
 	}
 }
 
-func TestSessionFailsWhenIrmaServerFails(t *testing.T) {
+func TestSessionIrmaServerError(t *testing.T) {
 	irma := newFakeIrma(t)
 	irma.status = http.StatusInternalServerError
 
@@ -200,7 +200,7 @@ func TestSessionFailsWhenIrmaServerFails(t *testing.T) {
 	}
 }
 
-func TestSessionFailsWhenIrmaServerIsDown(t *testing.T) {
+func TestSessionIrmaServerDown(t *testing.T) {
 	irma := newFakeIrma(t)
 	irma.Close()
 
