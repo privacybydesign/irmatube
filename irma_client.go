@@ -49,7 +49,7 @@ type disclosureRequest struct {
 }
 
 // irmaClient starts sessions on the IRMA server. The session responses
-// are returned unparsed, because the browser needs them as they are.
+// are returned unparsed, because the browser needs them.
 type irmaClient struct {
 	serverURL    string
 	apiToken     string
@@ -92,6 +92,7 @@ func (c *irmaClient) startVerification(ctx context.Context, age int) ([]byte, er
 		for _, id := range ageAttributeIDs(age) {
 			alternatives = append(alternatives, []string{id})
 		}
+
 		disclose = append(disclose, alternatives)
 	}
 

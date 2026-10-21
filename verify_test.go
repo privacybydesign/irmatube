@@ -255,6 +255,7 @@ func TestVerifyOnlyAcceptsPost(t *testing.T) {
 			t.Errorf("%s status = %d, want 405", method, rec.Code)
 		}
 	}
+
 	if rec := do(h, http.MethodGet, verifyPath, ""); rec.Code == http.StatusOK {
 		t.Errorf("GET status = 200, want an error")
 	}

@@ -63,6 +63,7 @@ func TestIndexIsServed(t *testing.T) {
 			t.Errorf("%s / Content-Type = %q, want text/html", method, ct)
 		}
 	}
+
 	if body := do(h, http.MethodGet, "/", "").Body.String(); !strings.Contains(body, "YiviTube") {
 		t.Errorf("GET / body is not the YiviTube page")
 	}

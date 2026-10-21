@@ -82,6 +82,7 @@ func TestSessionMemberIDsDiffer(t *testing.T) {
 		credential := req.body["credentials"].([]any)[0].(map[string]any)
 		ids[credential["attributes"].(map[string]any)["id"]] = true
 	}
+
 	if len(ids) != 2 {
 		t.Errorf("got %d distinct ids in 2 sessions, want 2", len(ids))
 	}
@@ -145,6 +146,7 @@ func TestSessionVerification(t *testing.T) {
 			if len(got) != len(want) {
 				t.Fatalf("age alternatives = %v, want %v", got, want)
 			}
+
 			for i := range want {
 				if got[i] != want[i] {
 					t.Errorf("age alternative %d = %s, want %s", i, got[i], want[i])
