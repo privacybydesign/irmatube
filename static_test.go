@@ -11,7 +11,12 @@ import (
 	"testing"
 )
 
-const maxRedirects = 3
+const (
+	maxRedirects = 3
+
+	headerLocation  = "Location"
+	contentTypeHTML = "text/html"
+)
 
 // publicExtensions are the only kinds of file that belong in the web root.
 var publicExtensions = map[string]bool{
@@ -28,7 +33,7 @@ func getFollowingRedirects(h http.Handler, target string) *httptest.ResponseReco
 	current := target
 	rec := do(h, http.MethodGet, current, "")
 	for range maxRedirects {
-		location := rec.Header().Get("Location")
+		location := rec.Header().Get(headerLocation)
 		if rec.Code < http.StatusMovedPermanently || rec.Code > http.StatusPermanentRedirect || location == "" {
 			break
 		}
@@ -46,7 +51,7 @@ func getFollowingRedirects(h http.Handler, target string) *httptest.ResponseReco
 }
 
 func TestIndexIsServed(t *testing.T) {
-	h := newTestHandler(t, "http://irma.invalid")
+	h := newTestHandler(t, testUnusedIrmaURL)
 
 	for _, method := range []string{http.MethodGet, http.MethodHead} {
 		rec := do(h, method, "/", "")
@@ -54,7 +59,7 @@ func TestIndexIsServed(t *testing.T) {
 		if rec.Code != http.StatusOK {
 			t.Errorf("%s / status = %d, want 200", method, rec.Code)
 		}
-		if ct := rec.Header().Get("Content-Type"); !strings.HasPrefix(ct, "text/html") {
+		if ct := rec.Header().Get(headerContentType); !strings.HasPrefix(ct, contentTypeHTML) {
 			t.Errorf("%s / Content-Type = %q, want text/html", method, ct)
 		}
 	}
@@ -64,7 +69,7 @@ func TestIndexIsServed(t *testing.T) {
 }
 
 func TestPublicAssetsAreServed(t *testing.T) {
-	h := newTestHandler(t, "http://irma.invalid")
+	h := newTestHandler(t, testUnusedIrmaURL)
 
 	for _, target := range []string{
 		"/css/irmatube.css",
@@ -80,7 +85,7 @@ func TestPublicAssetsAreServed(t *testing.T) {
 }
 
 func TestNonPublicFilesNotServed(t *testing.T) {
-	h := newTestHandler(t, "http://irma.invalid")
+	h := newTestHandler(t, testUnusedIrmaURL)
 
 	for _, target := range []string{
 		"/.git/config",
@@ -129,7 +134,7 @@ func TestNonPublicFilesNotServed(t *testing.T) {
 }
 
 func TestDirectoriesAreNotListed(t *testing.T) {
-	h := newTestHandler(t, "http://irma.invalid")
+	h := newTestHandler(t, testUnusedIrmaURL)
 
 	for _, target := range []string{"/css/", "/css", "/img/", "/content/", "/content/covers/", "/lib/", "/js/"} {
 		rec := do(h, http.MethodGet, target, "")

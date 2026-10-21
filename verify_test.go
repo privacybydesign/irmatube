@@ -26,7 +26,7 @@ func verifyBody(t *testing.T, token, videoID string) string {
 func decodeVerify(t *testing.T, rec *httptest.ResponseRecorder) verifyResponse {
 	t.Helper()
 
-	if ct := rec.Header().Get("Content-Type"); ct != "application/json" {
+	if ct := rec.Header().Get(headerContentType); ct != contentTypeJSON {
 		t.Errorf("Content-Type = %q, want application/json (body %q)", ct, rec.Body.String())
 	}
 
@@ -59,7 +59,7 @@ func TestVerifyGrantsAccess(t *testing.T) {
 		{"age proof listed before membership", "django", "_iH0UBYDI4g", []attr{ageAttr(over18), memberAttr("regular")}},
 	}
 
-	h := newTestHandler(t, "http://irma.invalid")
+	h := newTestHandler(t, testUnusedIrmaURL)
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			token := signRS256(t, signingKey(), resultClaimsFor(tt.attrs...))
@@ -173,7 +173,7 @@ func TestVerifyDeniesAccess(t *testing.T) {
 		{"not a JWT", "up", func(*testing.T) string { return "not-a-jwt" }},
 	}
 
-	h := newTestHandler(t, "http://irma.invalid")
+	h := newTestHandler(t, testUnusedIrmaURL)
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			rec := do(h, http.MethodPost, verifyPath, verifyBody(t, tt.token(t), tt.video))
@@ -193,7 +193,7 @@ func TestVerifyTokenWithinLeeway(t *testing.T) {
 	claims["exp"] = time.Now().Add(-30 * time.Second).Unix()
 	token := signRS256(t, signingKey(), claims)
 
-	rec := do(newTestHandler(t, "http://irma.invalid"), http.MethodPost, verifyPath, verifyBody(t, token, "up"))
+	rec := do(newTestHandler(t, testUnusedIrmaURL), http.MethodPost, verifyPath, verifyBody(t, token, "up"))
 
 	if rec.Code != http.StatusOK {
 		t.Fatalf("status = %d, want 200 (body %q)", rec.Code, rec.Body.String())
@@ -223,7 +223,7 @@ func TestVerifyRejectsBadRequests(t *testing.T) {
 		{"video file extension", verifyBody(t, validToken, "up.json"), http.StatusBadRequest, ""},
 	}
 
-	h := newTestHandler(t, "http://irma.invalid")
+	h := newTestHandler(t, testUnusedIrmaURL)
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			rec := do(h, http.MethodPost, verifyPath, tt.body)
@@ -240,7 +240,7 @@ func TestVerifyRejectsBadRequests(t *testing.T) {
 }
 
 func TestVerifyVideoBeforeToken(t *testing.T) {
-	rec := do(newTestHandler(t, "http://irma.invalid"), http.MethodPost, verifyPath, verifyBody(t, "not-a-jwt", "nope"))
+	rec := do(newTestHandler(t, testUnusedIrmaURL), http.MethodPost, verifyPath, verifyBody(t, "not-a-jwt", "nope"))
 
 	if rec.Code != http.StatusBadRequest {
 		t.Fatalf("status = %d, want 400", rec.Code)
@@ -248,7 +248,7 @@ func TestVerifyVideoBeforeToken(t *testing.T) {
 }
 
 func TestVerifyOnlyAcceptsPost(t *testing.T) {
-	h := newTestHandler(t, "http://irma.invalid")
+	h := newTestHandler(t, testUnusedIrmaURL)
 
 	for _, method := range []string{http.MethodPut, http.MethodDelete} {
 		if rec := do(h, method, verifyPath, `{}`); rec.Code != http.StatusMethodNotAllowed {

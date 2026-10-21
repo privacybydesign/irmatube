@@ -39,10 +39,10 @@ func TestSessionIssuance(t *testing.T) {
 			if req.authorization != testAPIToken {
 				t.Errorf("Authorization = %q, want the API token", req.authorization)
 			}
-			if req.contentType != "application/json" {
+			if req.contentType != contentTypeJSON {
 				t.Errorf("Content-Type = %q, want application/json", req.contentType)
 			}
-			if req.body["@context"] != "https://irma.app/ld/request/issuance/v2" {
+			if req.body["@context"] != testIssuanceContext {
 				t.Errorf("@context = %v", req.body["@context"])
 			}
 
@@ -111,7 +111,7 @@ func TestSessionVerification(t *testing.T) {
 				t.Fatalf("got %d %q, want the IRMA server response passed through", status, body)
 			}
 			req := irma.requests[0]
-			if req.body["@context"] != "https://irma.app/ld/request/disclosure/v2" {
+			if req.body["@context"] != testDisclosureContext {
 				t.Errorf("@context = %v", req.body["@context"])
 			}
 

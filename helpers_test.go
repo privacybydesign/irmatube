@@ -21,6 +21,12 @@ import (
 const (
 	testCredentialID = "pbdf-staging.pbdf.yivitube"
 	testAPIToken     = "secret-token"
+
+	testUnusedIrmaURL     = "http://irma.invalid"
+	testIssuanceContext   = "https://irma.app/ld/request/issuance/v2"
+	testDisclosureContext = "https://irma.app/ld/request/disclosure/v2"
+	testProofStatus       = "VALID"
+
 	testSessionReply = `{"sessionPtr":{"u":"https://irma.example/irma/session/abc","irmaqr":"disclosing"},"token":"abc"}`
 )
 
@@ -74,8 +80,8 @@ func newFakeIrma(t *testing.T) *fakeIrma {
 		f.requests = append(f.requests, recordedRequest{
 			method:        r.Method,
 			path:          r.URL.Path,
-			authorization: r.Header.Get("Authorization"),
-			contentType:   r.Header.Get("Content-Type"),
+			authorization: r.Header.Get(headerAuthorization),
+			contentType:   r.Header.Get(headerContentType),
 			body:          body,
 		})
 
@@ -140,7 +146,7 @@ func resultClaimsFor(attrs ...attr) jwt.MapClaims {
 		"token":       "abc",
 		"status":      "DONE",
 		"type":        "disclosing",
-		"proofStatus": "VALID",
+		"proofStatus": testProofStatus,
 		"disclosed":   [][]map[string]any{disclosed},
 	}
 }

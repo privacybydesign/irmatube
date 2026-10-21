@@ -17,6 +17,9 @@ const (
 	sessionTypeVerification = "verification"
 
 	maxRequestBytes = 1 << 20
+
+	// Ages above 255 are rejected.
+	ageBitSize = 8
 )
 
 type server struct {
@@ -120,7 +123,7 @@ func parseAge(raw string) (int, error) {
 		return 0, nil
 	}
 
-	age, err := strconv.ParseUint(raw, 10, 8)
+	age, err := strconv.ParseUint(raw, 10, ageBitSize)
 
 	return int(age), err
 }

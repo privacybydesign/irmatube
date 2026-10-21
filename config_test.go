@@ -6,6 +6,11 @@ import (
 	"testing"
 )
 
+const (
+	testEnvPublicKey   = "IRMA_SERVER_PUBLICKEY"
+	testDefaultIrmaURL = "http://localhost:8088"
+)
+
 func writeTempFile(t *testing.T, content []byte) string {
 	t.Helper()
 
@@ -20,14 +25,14 @@ func writeTempFile(t *testing.T, content []byte) string {
 func clearEnv(t *testing.T) {
 	t.Helper()
 
-	for _, name := range []string{"IRMA_SERVER_URL", "IRMA_SERVER_API_TOKEN", "IRMATUBE_CREDENTIAL_ID", "IRMA_SERVER_PUBLICKEY"} {
+	for _, name := range []string{"IRMA_SERVER_URL", "IRMA_SERVER_API_TOKEN", "IRMATUBE_CREDENTIAL_ID", testEnvPublicKey} {
 		t.Setenv(name, "")
 	}
 }
 
 func TestLoadConfig(t *testing.T) {
 	clearEnv(t)
-	t.Setenv("IRMA_SERVER_PUBLICKEY", writeTempFile(t, publicKeyPEM(signingKey())))
+	t.Setenv(testEnvPublicKey, writeTempFile(t, publicKeyPEM(signingKey())))
 	t.Setenv("IRMA_SERVER_URL", "https://irma.example/")
 	t.Setenv("IRMA_SERVER_API_TOKEN", "token")
 	t.Setenv("IRMATUBE_CREDENTIAL_ID", "pbdf.pbdf.yivitube")
@@ -47,14 +52,14 @@ func TestLoadConfig(t *testing.T) {
 
 func TestLoadConfigDefaults(t *testing.T) {
 	clearEnv(t)
-	t.Setenv("IRMA_SERVER_PUBLICKEY", writeTempFile(t, publicKeyPEM(signingKey())))
+	t.Setenv(testEnvPublicKey, writeTempFile(t, publicKeyPEM(signingKey())))
 
 	cfg, err := loadConfig()
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	if cfg.irmaServerURL != "http://localhost:8088" || cfg.irmaAPIToken != "" || cfg.credentialID != "irma-demo.IRMATube.member" {
+	if cfg.irmaServerURL != testDefaultIrmaURL || cfg.irmaAPIToken != "" || cfg.credentialID != "irma-demo.IRMATube.member" {
 		t.Errorf("cfg = %+v", cfg)
 	}
 }
@@ -71,7 +76,7 @@ func TestLoadConfigNeedsPublicKey(t *testing.T) {
 
 	for name, path := range tests {
 		t.Run(name, func(t *testing.T) {
-			t.Setenv("IRMA_SERVER_PUBLICKEY", path)
+			t.Setenv(testEnvPublicKey, path)
 
 			if _, err := loadConfig(); err == nil {
 				t.Errorf("loadConfig succeeded without a usable public key")
