@@ -15,6 +15,7 @@ import (
 )
 
 const (
+	listenNetwork     = "tcp"
 	listenAddr        = ":8080"
 	readHeaderTimeout = 10 * time.Second
 	writeTimeout      = 30 * time.Second
@@ -49,7 +50,7 @@ func main() {
 		IdleTimeout:       idleTimeout,
 	}
 
-	ln, err := net.Listen("tcp", listenAddr)
+	ln, err := net.Listen(listenNetwork, listenAddr)
 	if err != nil {
 		log.Fatal(err)
 	}

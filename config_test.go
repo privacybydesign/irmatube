@@ -7,7 +7,11 @@ import (
 )
 
 const (
-	testEnvPublicKey   = "IRMA_SERVER_PUBLICKEY"
+	testEnvServerURL    = "IRMA_SERVER_URL"
+	testEnvAPIToken     = "IRMA_SERVER_API_TOKEN"
+	testEnvCredentialID = "IRMATUBE_CREDENTIAL_ID"
+	testEnvPublicKey    = "IRMA_SERVER_PUBLICKEY"
+
 	testDefaultIrmaURL = "http://localhost:8088"
 )
 
@@ -25,7 +29,7 @@ func writeTempFile(t *testing.T, content []byte) string {
 func clearEnv(t *testing.T) {
 	t.Helper()
 
-	for _, name := range []string{"IRMA_SERVER_URL", "IRMA_SERVER_API_TOKEN", "IRMATUBE_CREDENTIAL_ID", testEnvPublicKey} {
+	for _, name := range []string{testEnvServerURL, testEnvAPIToken, testEnvCredentialID, testEnvPublicKey} {
 		t.Setenv(name, "")
 	}
 }
@@ -33,9 +37,9 @@ func clearEnv(t *testing.T) {
 func TestLoadConfig(t *testing.T) {
 	clearEnv(t)
 	t.Setenv(testEnvPublicKey, writeTempFile(t, publicKeyPEM(signingKey())))
-	t.Setenv("IRMA_SERVER_URL", "https://irma.example/")
-	t.Setenv("IRMA_SERVER_API_TOKEN", "token")
-	t.Setenv("IRMATUBE_CREDENTIAL_ID", "pbdf.pbdf.yivitube")
+	t.Setenv(testEnvServerURL, "https://irma.example/")
+	t.Setenv(testEnvAPIToken, "token")
+	t.Setenv(testEnvCredentialID, "pbdf.pbdf.yivitube")
 
 	cfg, err := loadConfig()
 	if err != nil {

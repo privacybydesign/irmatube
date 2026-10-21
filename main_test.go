@@ -20,7 +20,7 @@ func TestServeDrainsRequests(t *testing.T) {
 		io.WriteString(w, "done")
 	})
 
-	ln, err := net.Listen("tcp", "127.0.0.1:0")
+	ln, err := net.Listen(listenNetwork, "127.0.0.1:0")
 	if err != nil {
 		t.Fatal(err)
 	}
