@@ -13,7 +13,14 @@ import (
 var videoFiles embed.FS
 
 type video struct {
-	AgeRestriction int    `json:"ageRestriction"`
+	AgeRestriction int
+	YoutubeID      string
+}
+
+// videoJSON is the file format. AgeRestriction is a pointer so that a
+// missing or misspelled key is an error, not "no age limit".
+type videoJSON struct {
+	AgeRestriction *int   `json:"ageRestriction"`
 	YoutubeID      string `json:"youtubeId"`
 }
 
@@ -34,12 +41,16 @@ func loadVideos(fsys fs.FS) (videoCatalog, error) {
 			return nil, err
 		}
 
-		var v video
-		if err := json.Unmarshal(data, &v); err != nil {
+		var raw videoJSON
+		if err := json.Unmarshal(data, &raw); err != nil {
 			return nil, fmt.Errorf("%s: %w", name, err)
 		}
+		if raw.AgeRestriction == nil {
+			return nil, fmt.Errorf("%s: ageRestriction is missing", name)
+		}
 
-		catalog[strings.TrimSuffix(path.Base(name), ".json")] = v
+		id := strings.TrimSuffix(path.Base(name), ".json")
+		catalog[id] = video{AgeRestriction: *raw.AgeRestriction, YoutubeID: raw.YoutubeID}
 	}
 
 	return catalog, nil
