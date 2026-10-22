@@ -17,7 +17,7 @@ func TestServeDrainsRequests(t *testing.T) {
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		close(started)
 		<-release
-		io.WriteString(w, "done")
+		_, _ = io.WriteString(w, "done")
 	})
 
 	ln, err := net.Listen(listenNetwork, "127.0.0.1:0")
@@ -38,7 +38,7 @@ func TestServeDrainsRequests(t *testing.T) {
 			replies <- err.Error()
 			return
 		}
-		defer resp.Body.Close()
+		defer func() { _ = resp.Body.Close() }()
 
 		body, _ := io.ReadAll(resp.Body)
 		replies <- string(body)
