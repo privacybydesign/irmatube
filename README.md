@@ -16,7 +16,7 @@ Note that the movies themselves are not included in this repository and only a Y
 
 You need Go (see `go.mod` for the version), Node.js and an [IRMA server](https://github.com/privacybydesign/irmago).
 
-* Fetch the front-end libraries into `static/lib`: `npm install --ignore-scripts && npm run build:libs`
+* Fetch the front-end libraries into `static/lib`: `npm ci --ignore-scripts && npm run build:libs`
 * Start YiviTube with `IRMA_SERVER_PUBLICKEY=data/demo-publickey.pem go run .` and open http://localhost:8080.
 * Note that demo keys provided are only for local testing. YiviTube needs [IRMA  server's](https://github.com/privacybydesign/irmago) public key and irma server will need it's corresponding private key, which can be provided using `--jwt-privkey-file` flag.
 

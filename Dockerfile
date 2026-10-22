@@ -2,9 +2,9 @@ FROM node:24 AS libs
 
 WORKDIR /build
 
-COPY package.json .
+COPY package.json package-lock.json ./
 
-RUN npm install --ignore-scripts \
+RUN npm ci --ignore-scripts \
     && npm run build:libs
 
 # ---

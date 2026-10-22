@@ -8,7 +8,7 @@ demo page and the two endpoints behind it. It replaced a PHP implementation.
 - `go vet ./... && go test ./...`. The Go version is set in `go.mod`.
 - Tests use `httptest` and a fake IRMA server; no network or IRMA server needed.
 - `static/lib/` (Bootstrap, jQuery, Mustache, yivi-frontend) is gitignored and
-  built from `package.json` with `npm install --ignore-scripts && npm run build:libs`.
+  built from `package.json` and `package-lock.json` with `npm ci --ignore-scripts && npm run build:libs`.
   The Dockerfile does this. `go test` does not need it.
 
 ## Layout
