@@ -1,0 +1,10 @@
+FROM golang:1.26.10
+
+WORKDIR /app
+
+COPY . .
+
+RUN go mod download
+
+# In CI a host directory is mounted at /coverage to collect the profile.
+CMD ["go", "test", "./...", "-v", "-covermode=atomic", "-coverprofile=/coverage/coverage.out"]

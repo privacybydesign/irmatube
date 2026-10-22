@@ -1,11 +1,9 @@
 Data directory
 --------------
 
-Add the following to this directory:
+Holds the demo keys for local testing with `docker compose`:
 
- * `pk.pem` - The public key of the IRMA server you are using
- * `videos/` - A directory containing for each movie:
-  * A `.json` containing age restriction and youtube ID for embedding the video
+ * `demo-privkey.pem` - The private key of the demo IRMA server, passed to it with `--jwt-privkey-file`
+ * `demo-publickey.pem` - The matching public key, set as `IRMA_SERVER_PUBLICKEY` for YiviTube
 
-
-If you change the names of these files, or move the location of this folder relative to the www/ directory, be sure to update `www/config.php` and `www/content/movies.js`.
+The movies are in the `videos` directory in the root of the repository.

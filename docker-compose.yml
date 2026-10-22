@@ -1,5 +1,5 @@
 services:
-  php:
+  irmatube:
     build: .
     ports:
       - "8080:8080"
@@ -9,8 +9,7 @@ services:
       - irma
     environment:
       - IRMA_SERVER_URL=http://irma:8088
-      - ROOT_DIR=/app/data/
-      - IRMA_SERVER_PUBLICKEY=/app/data/demo-publickey.pem
+      - IRMA_SERVER_PUBLICKEY=/data/demo-publickey.pem
       # - IRMA_SERVER_API_TOKEN=mysecrettoken
       - IRMATUBE_CREDENTIAL_ID=irma-demo.IRMATube.member
     volumes:

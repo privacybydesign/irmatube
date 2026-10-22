@@ -4,6 +4,9 @@
   "description": "IRMA demo showing issuance and verification of IRMA attributes",
   "author": "Privacy by Design Foundation",
   "license": "Apache",
+  "scripts": {
+    "build:libs": "mkdir -p static/lib && cp node_modules/bootstrap/dist/css/bootstrap.min.css node_modules/bootstrap/dist/js/bootstrap.min.js node_modules/jquery/dist/jquery.min.js node_modules/mustache/mustache.min.js node_modules/@privacybydesign/yivi-frontend/dist/yivi.js static/lib/"
+  },
   "dependencies": {
     "@privacybydesign/yivi-frontend": "^1.0.3",
     "bootstrap": "^5.0.0",
