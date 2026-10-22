@@ -123,41 +123,39 @@
             videoid: videoNumber,
           }),
         })
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error("HTTP error, status = " + response.status);
-            }
-            return response.json();
-          })
+          // A refused check answers 403 with {"success": false}; read the
+          // body for every status so the user always gets a message.
+          .then((response) => response.json())
           .then((result) => {
             console.log("Result from verify endpoint:", result);
 
-            if (result.success) {
-              // Find the movie in IRMATubeMovies
-              let movie = IRMATubeMovies.find((m) => m.id === videoNumber);
-              if (!movie) {
-                console.error("Movie not found for ID:", videoNumber);
-                $(`#movie_${videoNumber}_player`).html(
-                  "<p>Error: Movie not found.</p>"
-                );
-                return;
-              }
-
-              let videoData = {
-                id: movie.id,
-                youtubeId: result.youtubeId,
-              };
-
-              let html = Mustache.render($("#play-ytvideo").html(), videoData);
-              $("body").append(html);
-              $("#video_div_" + videoData.id).modal("show");
-            } else {
-              console.warn("Verification failed:", result.message);
-              $(`#movie_${videoNumber}_player`).html(
-                `<p>${result.message || "Verification failed."}</p>`
-              );
+            if (!result.success) {
+              showError("You may not watch this movie. It needs a YiviTube membership"
+                        + (ageLimit > 0 ? " and proof that you are " + ageLimit + " or older." : "."));
+              return;
             }
+
+            // Find the movie in IRMATubeMovies
+            let movie = IRMATubeMovies.find((m) => m.id === videoNumber);
+            if (!movie) {
+              console.error("Movie not found for ID:", videoNumber);
+              showError("Movie not found.");
+              return;
+            }
+
+            let videoData = {
+              id: movie.id,
+              youtubeId: result.youtubeId,
+            };
+
+            let html = Mustache.render($("#play-ytvideo").html(), videoData);
+            $("body").append(html);
+            $("#video_div_" + videoData.id).modal("show");
           })
+          .catch((err) => {
+            console.error("Verification failed:", err);
+            showError("Could not check your membership. Please try again.");
+          });
       };
 
       let url = "api/session?type=verification";
