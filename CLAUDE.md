@@ -31,16 +31,20 @@ demo page and the two endpoints behind it. It replaced a PHP implementation.
 
 ## CI
 
-`.github/workflows/delivery.yml` builds the Docker image and scans it with
-`anchore/scan-action` (`only-fixed: true`, `severity-cutoff: critical`). The job
+The workflows call the shared ones in `privacybydesign/github-workflows`.
+`.github/workflows/status-checks.yml` builds and scans the image on pull
+requests, and `.github/workflows/delivery.yml` builds, scans and pushes it
+(`:edge` from `master`, `:x.y.z` and `:latest` on a release). The scan (Anchore)
 fails when the image contains a critical vulnerability that has a fix available.
-The scan also runs on a weekly schedule, so a pinned version drifts into
-failure as new CVEs are published.
+`.github/workflows/image-rescan.yml` re-scans the published images weekly, so a
+pinned version drifts into failure as new CVEs are published.
 
 The runtime image is `distroless/static`, so findings are in the Go binary: the
 standard library from the pinned `golang:<version>` tag in the `Dockerfile`, or a
 module from `go.mod`. When the scan fails, bump the `golang` tag to the latest
 patch release or update the module (`go get <module>@latest && go mod tidy`).
 
-`.github/workflows/status-checks.yml` runs the shared Go checks, with the tests
-in `Dockerfile.test`.
+`.github/workflows/status-checks.yml` also runs the shared Go checks (with the
+tests in `Dockerfile.test`), `npm ci` plus `npm run build:libs`, dependency
+review and workflow lint. Its gate job "Status checks passed" is the check to
+require. CodeQL runs through GitHub's default setup, not a workflow.
