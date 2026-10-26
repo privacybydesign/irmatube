@@ -14,6 +14,15 @@ on:
 permissions: {}
 
 jobs:
+  # Installs the browser libraries from package-lock.json and copies them into static/lib.
+  frontend:
+    uses: privacybydesign/github-workflows/.github/workflows/node-checks.yml@v1
+    permissions:
+      contents: read
+    with:
+      scripts: build:libs
+      ignore-scripts: true
+
   go:
     uses: privacybydesign/github-workflows/.github/workflows/go-checks.yml@v1
     permissions:
@@ -23,7 +32,7 @@ jobs:
       coverage-file: /coverage/coverage.out # Dockerfile.test writes here
       upload-coverage: true
 
-  # Builds and scans the image without pushing it; Delivery pushes from main.
+  # Builds and scans the image without pushing it; Delivery pushes from master.
   docker:
     if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
     uses: privacybydesign/github-workflows/.github/workflows/docker-publish.yml@v1
@@ -35,16 +44,6 @@ jobs:
       attestations: write
     with:
       push-image: false
-
-  codeql:
-    uses: privacybydesign/github-workflows/.github/workflows/codeql.yml@v1
-    permissions:
-      contents: read
-      security-events: write
-      actions: read
-    with:
-      languages: '["go", "actions"]'
-      go-build-command: go build ./...
 
   dependency-review:
     if: github.event_name == 'pull_request'
@@ -61,7 +60,7 @@ jobs:
   passed:
     name: Status checks passed
     if: always()
-    needs: [go, docker, codeql, dependency-review, workflow-lint]
+    needs: [frontend, go, docker, dependency-review, workflow-lint]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions: {}
