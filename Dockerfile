@@ -1,4 +1,4 @@
-FROM node:24 AS libs
+FROM node:25 AS libs
 
 WORKDIR /build
 
@@ -9,7 +9,7 @@ RUN npm ci --ignore-scripts \
 
 # ---
 
-FROM golang:1.26.10 AS build
+FROM golang:1.27.2 AS build
 
 WORKDIR /build
 
