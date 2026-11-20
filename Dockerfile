@@ -1,4 +1,4 @@
-FROM node:24 AS libs
+FROM node:26 AS libs
 
 WORKDIR /build
 
