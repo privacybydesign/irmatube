@@ -9,7 +9,7 @@ RUN npm ci --ignore-scripts \
 
 # ---
 
-FROM golang:1.26.10 AS build
+FROM golang:1.27.4 AS build
 
 WORKDIR /build
 
