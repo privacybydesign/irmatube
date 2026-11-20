@@ -34,6 +34,7 @@ jobs:
     permissions:
       contents: read
     with:
+      golangci-lint-version: v2.15.0 # the default v2.12.2 cannot read Go >= 1.27.x
       test-dockerfile: Dockerfile.test
       coverage-file: /coverage/coverage.out # Dockerfile.test writes here
       upload-coverage: true
