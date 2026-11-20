@@ -137,7 +137,6 @@ func TestSessionVerification(t *testing.T) {
 				got = append(got, alternative.([]any)[0].(string))
 			}
 			want := []string{
-				"pbdf.pbdf.ageLimits.over" + tt.wantAge,
 				"pbdf.nijmegen.ageLimits.over" + tt.wantAge,
 				"pbdf.gemeente.personalData.over" + tt.wantAge,
 				"pbdf.pilot-amsterdam.idcard.over" + tt.wantAge,

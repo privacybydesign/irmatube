@@ -13,7 +13,6 @@ const (
 // ageAttributePrefixes are the issuers of "over N" attributes that
 // YiviTube accepts as proof of age.
 var ageAttributePrefixes = []string{
-	"pbdf.pbdf.ageLimits.over",
 	"pbdf.nijmegen.ageLimits.over",
 	"pbdf.gemeente.personalData.over",
 	"pbdf.pilot-amsterdam.idcard.over",
