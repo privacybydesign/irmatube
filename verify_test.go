@@ -39,7 +39,7 @@ func decodeVerify(t *testing.T, rec *httptest.ResponseRecorder) verifyResponse {
 }
 
 func TestVerifyGrantsAccess(t *testing.T) {
-	over18 := "pbdf.pbdf.ageLimits.over18"
+	over18 := "pbdf.nijmegen.ageLimits.over18"
 
 	tests := []struct {
 		name      string
@@ -78,7 +78,7 @@ func TestVerifyGrantsAccess(t *testing.T) {
 }
 
 func TestVerifyDeniesAccess(t *testing.T) {
-	over18 := "pbdf.pbdf.ageLimits.over18"
+	over18 := "pbdf.nijmegen.ageLimits.over18"
 	member := memberAttr("regular")
 
 	tests := []struct {
@@ -105,7 +105,7 @@ func TestVerifyDeniesAccess(t *testing.T) {
 			return signRS256(t, signingKey(), resultClaimsFor(member, attr{over18, nil}))
 		}},
 		{"over 16 proof for 18+ video", "django", func(t *testing.T) string {
-			return signRS256(t, signingKey(), resultClaimsFor(member, ageAttr("pbdf.pbdf.ageLimits.over16")))
+			return signRS256(t, signingKey(), resultClaimsFor(member, ageAttr("pbdf.nijmegen.ageLimits.over16")))
 		}},
 		{"age proof from unknown issuer", "django", func(t *testing.T) string {
 			return signRS256(t, signingKey(), resultClaimsFor(member, ageAttr("irma-demo.evil.ageLimits.over18")))
